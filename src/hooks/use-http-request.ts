@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-interface Field {
+export interface Field {
   address: string;
   birthday_date: string;
   email: string;
@@ -18,7 +18,7 @@ interface Data {
 }
 
 function useHttpRequest(params: { page: number; limit: number }) {
-  let { page, limit } = params;
+  const { page, limit } = params;
   const [recievedData, setReceivedData] = useState<Data>({ count: limit, results: [] });
   const { count } = recievedData;
   const total = Math.ceil(count / limit);
@@ -31,7 +31,7 @@ function useHttpRequest(params: { page: number; limit: number }) {
         },
         params: {
           limit,
-          offset: String(--page * limit),
+          offset: String(page - 1 * limit),
         },
       });
 
@@ -48,9 +48,6 @@ function useHttpRequest(params: { page: number; limit: number }) {
       }
     }
   }
-
-  console.log(recievedData);
-  console.log(count);
 
   return {
     recievedData,

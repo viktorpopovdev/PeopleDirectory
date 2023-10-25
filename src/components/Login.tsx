@@ -6,6 +6,7 @@ import { login } from '../features/User';
 import { TextInput, PasswordInput, Button } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import classes from './Login.module.css';
+import { notifications } from '@mantine/notifications';
 
 import axios from 'axios';
 
@@ -16,7 +17,7 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(isLoggedIn);
+    // console.log(isLoggedIn);
   }, [isLoggedIn]);
 
   async function submitHandler() {
@@ -37,19 +38,20 @@ function Login() {
 
       if (status === 200) {
         dispatch(login());
+        navigate('/directory');
+        notifications.show({ message: data.message, color: 'green' });
       }
 
-      console.log(data, status);
+      // console.log(data, status);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        console.log('error message: ', error.message);
-        return error.message;
+        // console.log(error);
+        notifications.show({ message: error.response?.data.error, color: 'red' });
       } else {
-        console.log('unexpected error: ', error);
+        // console.log('unexpected error: ', error);
         return 'An unexpected error occurred';
       }
     }
-    navigate('/directory');
   }
 
   const form = useForm({
